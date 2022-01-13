@@ -49,6 +49,33 @@
                         <div class="card-body">{{lesson.content}}</div>
                     </div>
                 {% endfor %}
+                {% if user.is_authenticated %}
+                <div class="card mt-1">
+                    <div class="card-header"><h5>{{course.name}} Exam</h5></div>
+                <button class="btn btn-info btn-block" data-toggle="collapse" data-target="#exam-content">Start Exam</button>
+                <form id="exam-content" class="collapse" action="point to a submit view" method="post">
+                    {% for question in course.question_set.all %}
+                    <div class="card-header"><h5>{{ question.question_text}}</h5></div>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {% for choice in question.choice_set.all %}
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" name="choice_{{choice.id}}"
+                                       class="form-check-input" id="{{choice.id}}"
+                                       value="{{choice.id}}">{{ choice.choice_text }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+                <input class="btn btn-success btn-block" type="submit" value="Submit">                        </form>
+                {% else %}
+                <button class="btn btn-warning btn-block">You must be enrolled to start exam</button>
+                </form>
+            </div>
+                {% endif %}
+                
             </div>
             <!-- Task: show questions and choices -->
             <!-- <HINT> Use Bootstrap Collapse to hide exam first, more details could be found here

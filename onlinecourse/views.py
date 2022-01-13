@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 # <HINT> Import any new Models here
-from .models import Course, Enrollment
+from .models import Course, Enrollment, Question, Choice, Submission
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
@@ -12,6 +12,12 @@ import logging
 logger = logging.getLogger(__name__)
 # Create your views here.
 
+def submit(request, course_id):
+    context = {}
+    sessionid = request.COOKIES.get('sessionid')
+    session = request.session.items()
+    User.objects.get(id=session)
+    Enrollment.objects.get(user=..., course=course_id)
 
 def registration_request(request):
     context = {}

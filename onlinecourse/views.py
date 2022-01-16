@@ -14,10 +14,30 @@ logger = logging.getLogger(__name__)
 
 def submit(request, course_id):
     context = {}
-    sessionid = request.COOKIES.get('sessionid')
-    session = request.session.items()
-    User.objects.get(id=session)
-    Enrollment.objects.get(user=..., course=course_id)
+    questions = Question.objects.filter(course_id=course_id)
+    enrollment = Enrollment.objects.get(user=request.user, course=Course.objects.get(id=course_id))
+    submission = Submission.objects.create(enrollment=enrollment)
+    choices = []
+    for question in questions:
+        choices_in_question = Choice.objects.filter(question_id=question.id)
+        for choice in choices_in_question:
+            if request.POST.get("choice_" + str(choice.id)):
+                choices.append(choice)
+                submission.choices.add(choice)
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id, submission.id)))
+
+def show_exam_result(request, course_id, submission_id):
+    context = {}
+    course = Course.objects.get(id=course_id)
+    submission = Submission.objects.get(id=submission_id)
+    choices = submission.choices.all()
+    print(choices, "sdasdas")
+    questions = Question.objects.filter(course_id=course_id)
+    grade = len([x for x in choices if x.is_correct == True])/len(questions)
+    context['course'] = course
+    context['selected_ids'] = [a for a in choices]
+    context['grade'] = int(round(grade, 2) * 100)
+    return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
 
 def registration_request(request):
     context = {}

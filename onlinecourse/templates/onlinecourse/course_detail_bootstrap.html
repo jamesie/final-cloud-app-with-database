@@ -53,7 +53,7 @@
                 <div class="card mt-1">
                     <div class="card-header"><h5>{{course.name}} Exam</h5></div>
                 <button class="btn btn-info btn-block" data-toggle="collapse" data-target="#exam-content">Start Exam</button>
-                <form id="exam-content" class="collapse" action="point to a submit view" method="post">
+                <form id="exam-content" class="collapse" action="./submit/" method="post">
                     {% for question in course.question_set.all %}
                     <div class="card-header"><h5>{{ question.question_text}}</h5></div>
                     {% csrf_token %}
